@@ -1,6 +1,6 @@
 {
   "name": "@alexa-chromecast/runtime",
-  "version": "0.0.1",
+  "version": "0.0.1-rc.1",
   "private": true,
   "scripts": {
     "prepare": "webpack-cli --config webpack.config.ts"
@@ -15,17 +15,17 @@
   "devDependencies": {
     "@types/aws-lambda": "8.10.46",
     "@types/node": "12.12.6",
-    "@types/webpack": "^4.41.17",
+    "@types/webpack": "4.41.17",
     "ts-loader": "7.0.5",
     "typescript": "3.8.3",
     "webpack": "4.42.1",
     "webpack-cli": "3.3.11",
-    "webpack-shell-plugin-next": "^1.1.9"
+    "webpack-shell-plugin-next": "1.1.9"
   },
   "dependencies": {
-    "ask-sdk": "^2.8.0",
-    "ask-sdk-core": "^2.8.0",
-    "ask-sdk-model": "^1.28.0",
+    "ask-sdk": "2.8.0",
+    "ask-sdk-core": "2.8.0",
+    "ask-sdk-model": "1.28.0",
     "aws-lambda": "1.0.5",
     "aws-sdk": "2.668.0"
   }

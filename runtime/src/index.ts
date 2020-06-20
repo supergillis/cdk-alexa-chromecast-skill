@@ -1,19 +1,20 @@
-import * as AWS from "aws-sdk";
-import * as ask from "ask-sdk-core";
-import { Response } from "ask-sdk-model";
+import * as AWS from 'aws-sdk';
+import * as ask from 'ask-sdk-core';
+import { Response } from 'ask-sdk-model';
 
 const sqs = new AWS.SQS();
 const sqsQueueAUrl = process.env.QUEUE_URL!;
 
-const cardTitle = "Chromecast";
+const cardTitle = 'Chromecast';
 
 const launchRequestHandler: ask.RequestHandler = {
   canHandle(handlerInput: ask.HandlerInput): boolean {
-    return handlerInput.requestEnvelope.request.type === "LaunchRequest";
+    return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   handle(handlerInput: ask.HandlerInput): Response {
-    const speechText = "You can ask Chromecast to pause or resume";
+    const speechText = 'You can ask Chromecast to pause or resume';
 
+    // prettier-ignore
     return handlerInput.responseBuilder
       .withSimpleCard(cardTitle, speechText)
       .withShouldEndSession(false)
@@ -24,17 +25,14 @@ const launchRequestHandler: ask.RequestHandler = {
 const pauseIntentHandler: ask.RequestHandler = {
   canHandle(handlerInput: ask.HandlerInput): boolean {
     const request = handlerInput.requestEnvelope.request;
-    return (
-      request.type === "IntentRequest" &&
-      request.intent.name === "AMAZON.PauseIntent"
-    );
+    return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.PauseIntent';
   },
   async handle(handlerInput: ask.HandlerInput): Promise<Response> {
     try {
       await sqs
         .sendMessage({
           QueueUrl: sqsQueueAUrl,
-          MessageBody: "PAUSE",
+          MessageBody: 'PAUSE',
         })
         .promise();
     } catch (e) {
@@ -42,7 +40,7 @@ const pauseIntentHandler: ask.RequestHandler = {
     }
 
     return handlerInput.responseBuilder
-      .withSimpleCard(cardTitle, "Pausing Chromecast")
+      .withSimpleCard(cardTitle, 'Pausing Chromecast')
       .withShouldEndSession(true)
       .getResponse();
   },
@@ -51,17 +49,14 @@ const pauseIntentHandler: ask.RequestHandler = {
 const resumeIntentHandler: ask.RequestHandler = {
   canHandle(handlerInput: ask.HandlerInput): boolean {
     const request = handlerInput.requestEnvelope.request;
-    return (
-      request.type === "IntentRequest" &&
-      request.intent.name === "AMAZON.ResumeIntent"
-    );
+    return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.ResumeIntent';
   },
   async handle(handlerInput: ask.HandlerInput): Promise<Response> {
     try {
       await sqs
         .sendMessage({
           QueueUrl: sqsQueueAUrl,
-          MessageBody: "RESUME",
+          MessageBody: 'RESUME',
         })
         .promise();
     } catch (e) {
@@ -69,7 +64,7 @@ const resumeIntentHandler: ask.RequestHandler = {
     }
 
     return handlerInput.responseBuilder
-      .withSimpleCard(cardTitle, "Resuming Chromecast")
+      .withSimpleCard(cardTitle, 'Resuming Chromecast')
       .withShouldEndSession(true)
       .getResponse();
   },
@@ -78,17 +73,14 @@ const resumeIntentHandler: ask.RequestHandler = {
 const stopIntentHandler: ask.RequestHandler = {
   canHandle(handlerInput: ask.HandlerInput): boolean {
     const request = handlerInput.requestEnvelope.request;
-    return (
-      request.type === "IntentRequest" &&
-      request.intent.name === "AMAZON.StopIntent"
-    );
+    return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.StopIntent';
   },
   async handle(handlerInput: ask.HandlerInput): Promise<Response> {
     try {
       await sqs
         .sendMessage({
           QueueUrl: sqsQueueAUrl,
-          MessageBody: "STOP",
+          MessageBody: 'STOP',
         })
         .promise();
     } catch (e) {
@@ -96,7 +88,7 @@ const stopIntentHandler: ask.RequestHandler = {
     }
 
     return handlerInput.responseBuilder
-      .withSimpleCard(cardTitle, "Stopped Chromecast")
+      .withSimpleCard(cardTitle, 'Stopped Chromecast')
       .withShouldEndSession(true)
       .getResponse();
   },
@@ -117,12 +109,7 @@ const errorHandler: ask.ErrorHandler = {
 };
 
 const skill = ask.SkillBuilders.custom()
-  .addRequestHandlers(
-    launchRequestHandler,
-    pauseIntentHandler,
-    resumeIntentHandler,
-    stopIntentHandler
-  )
+  .addRequestHandlers(launchRequestHandler, pauseIntentHandler, resumeIntentHandler, stopIntentHandler)
   .addErrorHandlers(errorHandler)
   .create();
 
