@@ -1,0 +1,21 @@
+{
+  "name": "@alexa-chromecast/alexa-skill",
+  "version": "0.0.1",
+  "private": true,
+  "main": "lib/index.ts",
+  "dependencies": {
+    "@alexa-chromecast/alexa-skill-lambda": "workspace:^0.0.1",
+    "@aws-cdk/aws-iam": "1.45.0",
+    "@aws-cdk/aws-lambda": "1.45.0",
+    "@aws-cdk/core": "1.45.0"
+  },
+  "peerDependencies": {
+    "@aws-cdk/aws-iam": "^1.45.0",
+    "@aws-cdk/aws-lambda": "^1.45.0",
+    "@aws-cdk/core": "^1.45.0"
+  },
+  "devDependencies": {
+    "@types/node": "12.12.6",
+    "typescript": "3.8.3"
+  }
+}

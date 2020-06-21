@@ -1,5 +1,5 @@
 {
-  "name": "@alexa-chromecast/runtime",
+  "name": "@alexa-chromecast/alexa-skill-lambda",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -23,10 +23,10 @@
     "webpack-shell-plugin-next": "1.1.9"
   },
   "dependencies": {
-    "ask-sdk": "2.8.0",
-    "ask-sdk-core": "2.8.0",
-    "ask-sdk-model": "1.28.0",
+    "ask-smapi-model": "^1.9.3",
+    "ask-smapi-sdk": "^1.2.2",
     "aws-lambda": "1.0.5",
-    "aws-sdk": "2.668.0"
+    "aws-sdk": "2.668.0",
+    "exponential-backoff": "^3.0.1"
   }
 }
