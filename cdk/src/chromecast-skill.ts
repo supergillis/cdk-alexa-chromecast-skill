@@ -115,10 +115,6 @@ export class ChromecastSkill extends cdk.Construct {
             invocationName: 'my chromecast',
             intents: [
               {
-                name: 'AMAZON.FallbackIntent',
-                samples: ['fallback'],
-              },
-              {
                 name: 'AMAZON.CancelIntent',
                 samples: ['cancel'],
               },
