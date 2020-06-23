@@ -2,31 +2,61 @@ import boto3
 import pychromecast
 import json
 import sys
+from typing import Optional
+
+if len(sys.argv) != 3:
+    print("Usage: poll.py <chromecast_name> <outputs_file>")
+    exit(1)
 
 chromecast_name = sys.argv[1]
+outputs_path = sys.argv[2]
 
-print(f'Connecting to Chromecast "{chromecast_name}""...')
-
-casts = pychromecast.get_chromecasts()
-cast = next(cc for cc in casts if cc.device.friendly_name == chromecast_name)
-cast.wait()
-controller = cast.media_controller
-
-with open(sys.argv[2]) as config_file:
-    config = json.load(config_file)
-    config = config['AlexaChromecast']
-
-print('Starting to listen for messages...')
-
-sqs = boto3.client(
-    'sqs',
-    region_name=config['Region'],
-    aws_access_key_id=config['ControllerAccessKeyId'],
-    aws_secret_access_key=config['ControllerAccessKeySecret'])
-sqs_queue_url = config['QueueUrl']
+with open(outputs_path) as outputs_file:
+    outputs = json.load(outputs_file)
+    outputs = outputs['AlexaChromecast']
 
 
-def handle_message(message):
+class ChromecastController:
+    handle: Optional[pychromecast.controllers.media.MediaController]
+
+    def __init__(self):
+        self.handle = None
+
+    def _get_handle(self) -> pychromecast.controllers.media.MediaController:
+        print(f'Connecting to Chromecast "{chromecast_name}"...')
+        if self.handle is None or not self.handle.is_active:
+            try:
+                casts = pychromecast.get_chromecasts()
+                cast = next(cc for cc in casts if cc.device.friendly_name ==
+                            chromecast_name)
+                cast.wait()
+                self.handle = cast.media_controller
+                print(f'Connected to Chromecast {chromecast_name}!')
+            except:
+                print(f'Cannot connect to Chromecast {chromecast_name}...')
+        return self.handle
+
+    def play(self):
+        handle = self._get_handle()
+        if handle:
+            handle.play()
+            print('Resumed Chromecast!')
+        else:
+            print('Not connected to Chromecast...')
+
+    def pause(self):
+        handle = self._get_handle()
+        if handle:
+            handle.pause()
+            print('Paused Chromecast!')
+        else:
+            print('Not connected to Chromecast...')
+
+
+controller = ChromecastController()
+
+
+def sqs_handle_message(message):
     command = message['Body']
     print(f'Executing command "{command}"')
 
@@ -75,7 +105,16 @@ def sqs_polling(queue_url, callback, process_all=False):
             Entries=delete_batch)
 
 
+print('Starting to listen for messages...')
+
+sqs = boto3.client(
+    'sqs',
+    region_name=outputs['Region'],
+    aws_access_key_id=outputs['ControllerAccessKeyId'],
+    aws_secret_access_key=outputs['ControllerAccessKeySecret'])
+sqs_queue_url = outputs['QueueUrl']
+
 # Start polling the queue
 sqs_polling(queue_url=sqs_queue_url,
-            callback=handle_message,
+            callback=sqs_handle_message,
             process_all=False)
