@@ -24,13 +24,17 @@ class ChromecastController:
 
     def _get_handle(self) -> pychromecast.controllers.media.MediaController:
         print(f'Connecting to Chromecast "{chromecast_name}"...')
-        if self.handle is None or not self.handle.is_active:
+        if self.handle and not self.handle.is_active:
+            self.handle = None
+        if self.handle is None:
             try:
                 casts = pychromecast.get_chromecasts()
                 cast = next(cc for cc in casts if cc.device.friendly_name ==
                             chromecast_name)
                 cast.wait()
-                self.handle = cast.media_controller
+                handle = cast.media_controller
+                if handle.is_active:
+                    self.handle = handle
                 print(f'Connected to Chromecast {chromecast_name}!')
             except:
                 print(f'Cannot connect to Chromecast {chromecast_name}...')
