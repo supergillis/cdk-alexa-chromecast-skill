@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@alexa-chromecast/alexa-skill": "workspace:^0.0.1",
+    "@alexa-chromecast/alexa-skill-api": "workspace:^0.0.1",
+    "@alexa-chromecast/alexa-skill-interaction-model": "workspace:^0.0.1",
     "@alexa-chromecast/runtime": "workspace:0.0.1",
     "@aws-cdk/aws-iam": "1.45.0",
     "@aws-cdk/aws-lambda": "1.45.0",

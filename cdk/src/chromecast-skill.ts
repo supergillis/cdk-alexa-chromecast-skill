@@ -3,7 +3,9 @@ import * as cdk from '@aws-cdk/core';
 import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as sqs from '@aws-cdk/aws-sqs';
-import { AlexaSkill, AlexaSkillProps, AlexaInteractionModel, AlexaSkillApi } from '@alexa-chromecast/alexa-skill';
+import { AlexaSkill, AlexaSkillProps } from '@alexa-chromecast/alexa-skill';
+import { AlexaSkillApi } from '@alexa-chromecast/alexa-skill-api';
+import { AlexaInteractionModel } from '@alexa-chromecast/alexa-skill-interaction-model';
 
 export interface ChromecastSkillProps {
   vendorId: string;
