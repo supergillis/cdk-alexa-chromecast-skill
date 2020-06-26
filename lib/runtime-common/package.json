@@ -1,5 +1,5 @@
 {
-  "name": "@alexa-chromecast/runtime-common",
+  "name": "@cdk-alexa-skill/runtime-common",
   "version": "0.0.1",
   "private": true,
   "files": [

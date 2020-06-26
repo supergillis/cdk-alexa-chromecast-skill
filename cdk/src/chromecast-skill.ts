@@ -3,9 +3,9 @@ import * as cdk from '@aws-cdk/core';
 import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as sqs from '@aws-cdk/aws-sqs';
-import { AlexaSkill, AlexaSkillProps } from '@alexa-chromecast/alexa-skill';
-import { AlexaSkillApi } from '@alexa-chromecast/alexa-skill-api';
-import { AlexaInteractionModel } from '@alexa-chromecast/alexa-skill-interaction-model';
+import { AlexaSkill, AlexaSkillProps } from '@cdk-alexa-skill/skill';
+import { AlexaSkillApi } from '@cdk-alexa-skill/api';
+import { AlexaInteractionModel } from '@cdk-alexa-skill/interaction-model';
 
 export interface ChromecastSkillProps {
   vendorId: string;
@@ -71,7 +71,11 @@ export class ChromecastSkill extends cdk.Construct {
               description:
                 'Control your Chromecast using Alexa. An additional application needs to run on a computer in your local network.',
               keywords: [],
-              examplePhrases: [],
+              examplePhrases: [
+                'ask my chromecast to pause',
+                'ask my chromecast to play',
+                'ask my chromecast to resume',
+              ],
             },
           },
         },
@@ -83,7 +87,7 @@ export class ChromecastSkill extends cdk.Construct {
       },
     });
 
-    // Use `lambda.CfnPermission` so we can add the resource as a permission to `skillApi`
+    // Use `lambda.CfnPermission` so we can add the resource as a dependency to `skillApi`
     const skillPermission = new lambda.CfnPermission(this, 'HandlerSkillPermission', {
       functionName: this.handler.functionName,
       action: 'lambda:InvokeFunction',
@@ -137,12 +141,12 @@ export class ChromecastSkill extends cdk.Construct {
                 samples: ['home'],
               },
               {
-                name: 'AMAZON.PauseIntent',
-                samples: [],
+                name: 'ChromecastPauseIntent',
+                samples: ['pause'],
               },
               {
-                name: 'AMAZON.ResumeIntent',
-                samples: [],
+                name: 'ChromecastResumeIntent',
+                samples: ['play', 'resume'],
               },
             ],
             types: [],

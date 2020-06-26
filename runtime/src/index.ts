@@ -25,7 +25,7 @@ const launchRequestHandler: ask.RequestHandler = {
 const pauseIntentHandler: ask.RequestHandler = {
   canHandle(handlerInput: ask.HandlerInput): boolean {
     const request = handlerInput.requestEnvelope.request;
-    return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.PauseIntent';
+    return request.type === 'IntentRequest' && request.intent.name === 'ChromecastPauseIntent';
   },
   async handle(handlerInput: ask.HandlerInput): Promise<Response> {
     try {
@@ -49,7 +49,7 @@ const pauseIntentHandler: ask.RequestHandler = {
 const resumeIntentHandler: ask.RequestHandler = {
   canHandle(handlerInput: ask.HandlerInput): boolean {
     const request = handlerInput.requestEnvelope.request;
-    return request.type === 'IntentRequest' && request.intent.name === 'AMAZON.ResumeIntent';
+    return request.type === 'IntentRequest' && request.intent.name === 'ChromecastResumeIntent';
   },
   async handle(handlerInput: ask.HandlerInput): Promise<Response> {
     try {

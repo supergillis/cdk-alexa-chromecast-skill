@@ -4,8 +4,8 @@ import {
   CloudFormationCustomResourceDeleteEvent,
 } from 'aws-lambda';
 import { v1 } from 'ask-smapi-model';
-import { createClient, assertSkillSuccess, Authentication } from '@alexa-chromecast/runtime-common/src/smapi';
-import { errorHandler } from '@alexa-chromecast/runtime-common/src/cfn-response';
+import { createClient, assertSkillSuccess, Authentication } from '@cdk-alexa-skill/runtime-common/src/smapi';
+import { errorHandler } from '@cdk-alexa-skill/runtime-common/src/cfn-response';
 
 export interface HandlerProperties {
   Authentication: Authentication;

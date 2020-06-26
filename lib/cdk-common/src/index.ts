@@ -3,22 +3,22 @@ import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 
 export interface Authentication {
-  clientId: string;
-  clientSecret: string;
-  refreshToken: string;
+  readonly clientId: string;
+  readonly clientSecret: string;
+  readonly refreshToken: string;
 }
 
-export interface CustomResourceTokenProps {
-  runtime: lambda.Runtime;
-  code: lambda.Code;
-  handler: string;
+export interface CustomResourceProviderProps {
+  readonly runtime: lambda.Runtime;
+  readonly code: lambda.Code;
+  readonly handler: string;
 }
 
-export class CustomResourceToken extends cdk.Construct {
+export class CustomResourceProvider extends cdk.Construct {
   readonly role: iam.Role;
   readonly func: lambda.Function;
 
-  constructor(scope: cdk.Construct, id: string, props: CustomResourceTokenProps) {
+  constructor(scope: cdk.Construct, id: string, props: CustomResourceProviderProps) {
     super(scope, id);
 
     const { code, handler } = props;
@@ -42,16 +42,16 @@ export class CustomResourceToken extends cdk.Construct {
     });
   }
 
-  get functionArn(): string {
+  get serviceToken(): string {
     return this.func.functionArn;
   }
 
-  static create(scope: cdk.Construct, id: string, props: CustomResourceTokenProps): CustomResourceToken {
+  static create(scope: cdk.Construct, id: string, props: CustomResourceProviderProps): CustomResourceProvider {
     const stack = cdk.Stack.of(scope);
     const existing = stack.node.tryFindChild(id);
     if (existing) {
-      return existing as CustomResourceToken;
+      return existing as CustomResourceProvider;
     }
-    return new CustomResourceToken(stack, id, props);
+    return new CustomResourceProvider(stack, id, props);
   }
 }

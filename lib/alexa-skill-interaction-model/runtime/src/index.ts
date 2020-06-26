@@ -4,8 +4,8 @@ import {
   CloudFormationCustomResourceDeleteEvent,
 } from 'aws-lambda';
 import { v1 } from 'ask-smapi-model';
-import { createClient, Authentication } from '@alexa-chromecast/runtime-common/src/smapi';
-import { errorHandler } from '@alexa-chromecast/runtime-common/src/cfn-response';
+import { createClient, Authentication } from '@cdk-alexa-skill/runtime-common/src/smapi';
+import { errorHandler } from '@cdk-alexa-skill/runtime-common/src/cfn-response';
 
 export interface HandlerProperties {
   Authentication: Authentication;
@@ -38,10 +38,7 @@ async function onCreate(event: CloudFormationCustomResourceEvent) {
 
   const client = createClient(Authentication);
 
-  const setInteractionModelV1 = await client.callSetInteractionModelV1(SkillId, Stage, Locale, InteractionModel);
-
-  console.log(`setInteractionModelV1.statusCode`);
-  console.log(setInteractionModelV1.statusCode);
+  await client.callSetInteractionModelV1(SkillId, Stage, Locale, InteractionModel);
 
   return {
     physicalResourceId: Locale,
@@ -54,6 +51,9 @@ async function onCreate(event: CloudFormationCustomResourceEvent) {
 }
 
 async function onUpdate(event: CloudFormationCustomResourceUpdateEvent) {
+  const properties = (event.ResourceProperties as unknown) as HandlerProperties;
+  const oldProperties = (event.OldResourceProperties as unknown) as HandlerProperties;
+
   // TODO
   return onCreate(event);
 }

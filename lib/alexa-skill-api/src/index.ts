@@ -1,8 +1,8 @@
 import * as path from 'path';
 import * as cdk from '@aws-cdk/core';
 import * as lambda from '@aws-cdk/aws-lambda';
-import { Authentication, CustomResourceToken } from '@alexa-chromecast/cdk-common';
-import { HandlerProperties } from '@alexa-chromecast/alexa-skill-api-runtime';
+import { Authentication, CustomResourceProvider } from '@cdk-alexa-skill/cdk-common';
+import { HandlerProperties } from '@cdk-alexa-skill/api-runtime';
 
 export interface AlexaSkillApiProps {
   authentication: Authentication;
@@ -30,10 +30,10 @@ export class AlexaSkillApi extends cdk.Construct {
       SkillManifestApis: props.skillManifestApis,
     };
 
-    const lambdaPath = require.resolve('@alexa-chromecast/alexa-skill-api-runtime');
+    const lambdaPath = require.resolve('@cdk-alexa-skill/api-runtime');
     const lambdaDir = path.dirname(lambdaPath);
 
-    const serviceToken = new CustomResourceToken(this, 'Handler', {
+    const provider = CustomResourceProvider.create(this, `${AlexaSkillApi.RESOURCE_TYPE}Provider`, {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: lambda.Code.fromAsset(lambdaDir),
       handler: 'index.handler',
@@ -41,7 +41,7 @@ export class AlexaSkillApi extends cdk.Construct {
 
     this.resource = new cdk.CustomResource(this, 'Resource', {
       resourceType: AlexaSkillApi.RESOURCE_TYPE,
-      serviceToken: serviceToken.functionArn,
+      serviceToken: provider.serviceToken,
       properties: handlerProperties,
     });
   }
